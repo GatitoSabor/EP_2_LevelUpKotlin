@@ -29,3 +29,7 @@ LevelUp Gamer es una app demo desarrollada en Kotlin (Jetpack Compose + Room), p
 5. Ejecuta el proyecto (botón “Run” o `Shift+F10`).
 
 **Nota:** Al ejecutar por primera vez, la app popula la base de datos Room con un catálogo de productos demo de forma automática.
+
+## Planificación mediante trello
+<img width="1139" height="481" alt="imagen" src="https://github.com/user-attachments/assets/b5819e3d-a029-41dd-bc52-cf98405e7320" />
+
