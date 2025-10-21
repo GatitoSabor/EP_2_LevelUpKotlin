@@ -234,7 +234,10 @@ fun AppNavHost(
         composable("login") {
             LoginScreen(
                 viewModel = loginVM,
-                onSuccess = { navController.navigate("inicio") },
+                onLoginSuccess = { userId ->
+                    miCuentaVM.cargarUsuarioCompleto(userId)
+                    navController.navigate("inicio")
+                },
                 onRegister = { navController.navigate("register") }
             )
         }
@@ -271,9 +274,11 @@ fun AppNavHost(
         composable("micuenta") {
             MiCuentaScreen(
                 viewModel = miCuentaVM,
+                usuarioId = loginVM.usuarioActivo?.id, // ¡Este es el nuevo parámetro!
                 onBack = { navController.popBackStack() }
             )
         }
+
         composable("contacto") {
             ContactoScreen(
                 onBack = { navController.popBackStack() }

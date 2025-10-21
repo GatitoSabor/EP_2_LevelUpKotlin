@@ -19,6 +19,9 @@ fun RegisterScreen(viewModel: LoginViewModel, onBack: () -> Unit, onLogin: () ->
     var username by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var showError by remember { mutableStateOf(false) }
+
+    val camposValidos = username.isNotBlank() && email.isNotBlank() && password.isNotBlank()
 
     Surface(color = MaterialTheme.colorScheme.background, modifier = Modifier.fillMaxSize()) {
         Box(
@@ -47,14 +50,14 @@ fun RegisterScreen(viewModel: LoginViewModel, onBack: () -> Unit, onLogin: () ->
                     )
                     OutlinedTextField(
                         value = username,
-                        onValueChange = { username = it },
+                        onValueChange = { username = it; showError = false },
                         label = { Text("Usuario", color = Color.Black) },
                         modifier = Modifier.fillMaxWidth(),
                         singleLine = true
                     )
                     OutlinedTextField(
                         value = email,
-                        onValueChange = { email = it },
+                        onValueChange = { email = it; showError = false },
                         label = { Text("Email", color = Color.Black) },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -63,7 +66,7 @@ fun RegisterScreen(viewModel: LoginViewModel, onBack: () -> Unit, onLogin: () ->
                     )
                     OutlinedTextField(
                         value = password,
-                        onValueChange = { password = it },
+                        onValueChange = { password = it; showError = false },
                         label = { Text("Password", color = Color.Black) },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -71,19 +74,34 @@ fun RegisterScreen(viewModel: LoginViewModel, onBack: () -> Unit, onLogin: () ->
                         singleLine = true,
                         visualTransformation = PasswordVisualTransformation()
                     )
+
+                    // Mensaje si intentaste registrar con campos vacíos
+                    if (showError && !camposValidos) {
+                        Text(
+                            "Debes completar todos los campos.",
+                            color = MaterialTheme.colorScheme.error,
+                            modifier = Modifier.padding(top = 8.dp)
+                        )
+                    }
+
                     Button(
                         onClick = {
-                            viewModel.registerNewUser(username, email, password) { success ->
-                                if (success) onBack()
+                            if (camposValidos) {
+                                viewModel.registerNewUser(username, email, password) { success ->
+                                    if (success != null) onBack()
+                                }
+                            } else {
+                                showError = true
                             }
                         },
+                        enabled = camposValidos,
                         modifier = Modifier
                             .padding(top = 16.dp)
                             .fillMaxWidth()
                     ) {
                         Text("Registrarse")
                     }
-                    // Este es el texto y botón para ir al login
+
                     TextButton(
                         onClick = onLogin,
                         modifier = Modifier.padding(top = 12.dp)

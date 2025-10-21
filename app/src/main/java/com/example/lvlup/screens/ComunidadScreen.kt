@@ -52,76 +52,76 @@ fun ComunidadScreen() {
         )
     )
 
-    Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+    Surface(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        color = MaterialTheme.colorScheme.background
+    ) {
+        // Surface blanco general
+        Surface(
+            color = Color.White,
+            shape = MaterialTheme.shapes.medium,
+            shadowElevation = 8.dp,
+            modifier = Modifier.fillMaxSize()
         ) {
-            Surface(
-                color = Color.White,
-                shape = MaterialTheme.shapes.medium,
-                shadowElevation = 8.dp,
+            LazyColumn(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp, bottom = 16.dp)
+                    .fillMaxSize()
+                    .padding(20.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Column(modifier = Modifier.padding(20.dp)) {
+                item {
                     Text("Comunidad Gamer", style = MaterialTheme.typography.headlineMedium)
                     Spacer(Modifier.height(16.dp))
-
                     Text("Noticias", style = MaterialTheme.typography.titleLarge)
                     Spacer(Modifier.height(8.dp))
-                    LazyColumn {
-                        items(noticias) { noticia ->
-                            Card(
+                }
+                items(noticias) { noticia ->
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 6.dp),
+                        elevation = CardDefaults.cardElevation(4.dp)
+                    ) {
+                        Row(modifier = Modifier.padding(12.dp)) {
+                            Image(
+                                painter = rememberAsyncImagePainter(noticia.imageUrl),
+                                contentDescription = noticia.title,
                                 modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 6.dp),
-                                elevation = CardDefaults.cardElevation(4.dp)
-                            ) {
-                                Row(modifier = Modifier.padding(12.dp)) {
-                                    Image(
-                                        painter = rememberAsyncImagePainter(noticia.imageUrl),
-                                        contentDescription = noticia.title,
-                                        modifier = Modifier
-                                            .size(72.dp)
-                                            .padding(end = 12.dp)
-                                    )
-                                    Column {
-                                        Text(noticia.title, style = MaterialTheme.typography.titleMedium)
-                                        Text(noticia.description, style = MaterialTheme.typography.bodyMedium)
-                                    }
-                                }
+                                    .size(72.dp)
+                                    .padding(end = 12.dp)
+                            )
+                            Column {
+                                Text(noticia.title, style = MaterialTheme.typography.titleMedium)
+                                Text(noticia.description, style = MaterialTheme.typography.bodyMedium)
                             }
                         }
                     }
-
+                }
+                item {
                     Spacer(Modifier.height(20.dp))
                     Text("Eventos", style = MaterialTheme.typography.titleLarge)
                     Spacer(Modifier.height(8.dp))
-                    LazyColumn {
-                        items(eventos) { evento ->
-                            Card(
+                }
+                items(eventos) { evento ->
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 6.dp),
+                        elevation = CardDefaults.cardElevation(4.dp)
+                    ) {
+                        Row(modifier = Modifier.padding(12.dp)) {
+                            Image(
+                                painter = rememberAsyncImagePainter(evento.imageUrl),
+                                contentDescription = evento.title,
                                 modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 6.dp),
-                                elevation = CardDefaults.cardElevation(4.dp)
-                            ) {
-                                Row(modifier = Modifier.padding(12.dp)) {
-                                    Image(
-                                        painter = rememberAsyncImagePainter(evento.imageUrl),
-                                        contentDescription = evento.title,
-                                        modifier = Modifier
-                                            .size(72.dp)
-                                            .padding(end = 12.dp)
-                                    )
-                                    Column {
-                                        Text(evento.title, style = MaterialTheme.typography.titleMedium)
-                                        Text(evento.description, style = MaterialTheme.typography.bodyMedium)
-                                    }
-                                }
+                                    .size(72.dp)
+                                    .padding(end = 12.dp)
+                            )
+                            Column {
+                                Text(evento.title, style = MaterialTheme.typography.titleMedium)
+                                Text(evento.description, style = MaterialTheme.typography.bodyMedium)
                             }
                         }
                     }
@@ -130,4 +130,3 @@ fun ComunidadScreen() {
         }
     }
 }
-

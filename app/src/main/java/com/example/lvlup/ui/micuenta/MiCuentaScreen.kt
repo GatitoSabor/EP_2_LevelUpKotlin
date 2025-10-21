@@ -4,6 +4,8 @@ import ProfileViewModel
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.*
@@ -18,6 +20,7 @@ import com.example.lvlup.data.CouponEntity
 @Composable
 fun MiCuentaScreen(
     viewModel: ProfileViewModel,
+    usuarioId: Int?,          // ← PASA EL id del usuario activo desde LoginViewModel
     onBack: () -> Unit
 ) {
     var editPassword by remember { mutableStateOf(false) }
@@ -27,10 +30,9 @@ fun MiCuentaScreen(
     var newPass by remember { mutableStateOf("") }
     var passError by remember { mutableStateOf<String?>(null) }
 
-
-    // Cupones (carga inicial)
-    LaunchedEffect(true) {
-        viewModel.cargarMisCupones(user?.id ?: 0)
+    // Siempre recarga los datos del usuario cuando el id cambia:
+    LaunchedEffect(usuarioId) {
+        usuarioId?.let { viewModel.cargarUsuarioCompleto(it) }
     }
 
     Surface(color = MaterialTheme.colorScheme.background, modifier = Modifier.fillMaxSize()) {
@@ -43,8 +45,11 @@ fun MiCuentaScreen(
                     .padding(20.dp)
                     .fillMaxWidth()
             ) {
+                // Scroll para toda la columna
                 Column(
-                    modifier = Modifier.padding(20.dp),
+                    modifier = Modifier
+                        .padding(20.dp)
+                        .verticalScroll(rememberScrollState()),
                     horizontalAlignment = Alignment.Start
                 ) {
                     Text("Mi Cuenta", style = MaterialTheme.typography.headlineMedium, color = MaterialTheme.colorScheme.primary)
@@ -221,12 +226,13 @@ fun MiCuentaScreen(
                         }
                     }
 
-                    // SECCIÓN DE CUPONES DEL USUARIO
+                    Spacer(Modifier.height(12.dp))
                     Text("Mis Cupones", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
                     Spacer(Modifier.height(10.dp))
                     if (viewModel.cupones.isEmpty()) {
                         Text("No tienes cupones canjeados aún.", style = MaterialTheme.typography.bodySmall)
                     } else {
+                        // LazyColumn en tamaño fijo dentro de la columna scroll
                         LazyColumn(
                             modifier = Modifier
                                 .fillMaxWidth()

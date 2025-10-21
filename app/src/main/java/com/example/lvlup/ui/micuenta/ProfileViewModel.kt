@@ -11,35 +11,68 @@ import kotlinx.coroutines.launch
 class ProfileViewModel(
     private val userRepository: UserRepository,
     private val couponRepository: CouponRepository,
-    private val userId: Int
+    userId: Int // Inicialmente el de la sesión activa, pero puede cambiar con login/logout
 ) : ViewModel() {
+
     var usuario by mutableStateOf<UserEntity?>(null)
     var direcciones by mutableStateOf(listOf<AddressEntity>())
     var editarNombre by mutableStateOf(false)
     var editarEmail by mutableStateOf(false)
     var newAddressText by mutableStateOf("")
     var editandoDireccionId by mutableStateOf<Int?>(null)
-
     var tempNombre by mutableStateOf("")
     var tempEmail by mutableStateOf("")
-
     var cupones by mutableStateOf(listOf<CouponEntity>())
 
+    private var currentUserId: Int = userId
+
     init {
+        cargarUsuarioCompleto(userId)
+    }
+
+    // Función para cambiar de usuario (tras login) y recargar todo
+    fun cargarUsuarioCompleto(nuevoUserId: Int) {
+        currentUserId = nuevoUserId
         cargarDatosUsuario()
         cargarDirecciones()
+        cargarMisCupones(nuevoUserId)
+        editarNombre = false
+        editarEmail = false
+        editandoDireccionId = null
+        tempNombre = ""
+        tempEmail = ""
+        newAddressText = ""
     }
 
     fun cargarDatosUsuario() {
         viewModelScope.launch {
-            usuario = userRepository.getUserById(userId)
+            usuario = userRepository.getUserById(currentUserId)
         }
     }
 
     fun cargarDirecciones() {
         viewModelScope.launch {
-            direcciones = userRepository.getAddresses(userId)
+            direcciones = userRepository.getAddresses(currentUserId)
         }
+    }
+
+    fun cargarMisCupones(userId: Int = currentUserId) {
+        viewModelScope.launch {
+            cupones = couponRepository.getUnusedCoupons(userId)
+        }
+    }
+
+    fun limpiarDatosUsuario() {
+        usuario = null
+        direcciones = listOf()
+        editarNombre = false
+        editarEmail = false
+        newAddressText = ""
+        editandoDireccionId = null
+        tempNombre = ""
+        tempEmail = ""
+        cupones = listOf()
+        currentUserId = -1 // usuario inválido
     }
 
     fun startEditNombre() {
@@ -80,7 +113,7 @@ class ProfileViewModel(
             viewModelScope.launch {
                 userRepository.updateUser(actualizado)
                 usuario = actualizado
-                // Podrías agregar lógica de cerrar edición aquí si quieres
+                // Puedes cerrar edición aquí si quieres
             }
         }
     }
@@ -88,7 +121,7 @@ class ProfileViewModel(
     fun addAddress(text: String) {
         if (text.isNotBlank()) {
             viewModelScope.launch {
-                userRepository.addAddress(userId, text)
+                userRepository.addAddress(currentUserId, text)
                 cargarDirecciones()
                 newAddressText = ""
             }
@@ -122,11 +155,5 @@ class ProfileViewModel(
 
     fun stopEditDireccion() {
         editandoDireccionId = null
-    }
-
-    fun cargarMisCupones(userId: Int) {
-        viewModelScope.launch {
-            cupones = couponRepository.getUnusedCoupons(userId)
-        }
     }
 }

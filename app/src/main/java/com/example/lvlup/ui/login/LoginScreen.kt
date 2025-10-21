@@ -15,9 +15,15 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 @Composable
 fun LoginScreen(
     viewModel: LoginViewModel,
-    onSuccess: () -> Unit,
+    onLoginSuccess: (userId: Int) -> Unit,
     onRegister: () -> Unit
 ) {
+    val loginSuccess = viewModel.loginSuccess
+    val loginError = viewModel.loginError
+    val usuarioActivo = viewModel.usuarioActivo
+
+    var isLoggingIn by remember { mutableStateOf(false) }
+
     Surface(color = MaterialTheme.colorScheme.background, modifier = Modifier.fillMaxSize()) {
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -63,9 +69,9 @@ fun LoginScreen(
                         visualTransformation = PasswordVisualTransformation()
                     )
 
-                    if (viewModel.loginError != null) {
+                    if (loginError != null) {
                         Text(
-                            text = viewModel.loginError ?: "",
+                            text = loginError,
                             color = MaterialTheme.colorScheme.error,
                             modifier = Modifier.padding(top = 8.dp)
                         )
@@ -73,14 +79,21 @@ fun LoginScreen(
 
                     Button(
                         onClick = {
-                            viewModel.login()
-                            if (viewModel.loginSuccess) onSuccess()
+                            isLoggingIn = true
+                            viewModel.login { usuario ->
+                                isLoggingIn = false
+                                // Solo avanza si login es exitoso y hay usuario
+                                if (usuario != null) {
+                                    onLoginSuccess(usuario.id)
+                                }
+                            }
                         },
+                        enabled = !isLoggingIn,
                         modifier = Modifier
                             .padding(top = 20.dp)
                             .fillMaxWidth()
                     ) {
-                        Text("Ingresar")
+                        Text(if (isLoggingIn) "Cargando..." else "Ingresar")
                     }
                     TextButton(
                         onClick = onRegister,
@@ -93,4 +106,3 @@ fun LoginScreen(
         }
     }
 }
-
