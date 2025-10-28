@@ -20,6 +20,15 @@ LevelUp Gamer es una app demo desarrollada en Kotlin (Jetpack Compose + Room), p
 - Persistencia con Room (base de datos local).
 - Diseño responsivo usando Material 3 y Jetpack Compose.
 
+## Tecnologías y herramientas usadas
+
+- Android Studio: Desarrollo principal de la aplicación.
+- Kotlin/Gradle: Lenguaje de programación y gestión de dependencias.
+ -Jetpack Compose: Para interfaces modernas y dinámicas.
+- Room: Persistencia y gestión local de datos.
+- GitHub: Control de versiones, colaboración y almacenamiento del repositorio.
+- Trello: Organización de la planificación, tareas y seguimiento del proyecto.
+
 ## Pasos para ejecutar
 
 1. Clona el repositorio: git clone https://github.com/GatitoSabor/EP_2_LevelUpKotlin.git
