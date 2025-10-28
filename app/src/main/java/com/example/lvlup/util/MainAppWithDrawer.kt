@@ -13,6 +13,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,6 +25,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.lvlup.screens.ComunidadScreen
 import com.example.lvlup.screens.ContactoScreen
+import com.example.lvlup.ui.adminproductos.AdminProductosScreen
+import com.example.lvlup.ui.adminproductos.AdminProductosViewModel
 import com.example.lvlup.ui.cart.CartScreen
 import com.example.lvlup.ui.cart.CartViewModel
 import com.example.lvlup.ui.home.HomeScreen
@@ -35,6 +38,10 @@ import com.example.lvlup.ui.puntos.PuntosViewModel
 import kotlinx.coroutines.launch
 import com.example.lvlup.ui.micuenta.MiCuentaScreen
 import com.example.lvlup.ui.home.InicioScreen
+import androidx.compose.ui.platform.LocalContext
+import androidx.room.Room
+import com.example.lvlup.data.AppDatabase
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -108,6 +115,17 @@ fun MainAppWithDrawer(
                                 navController.navigate("micuenta")
                             }
                         )
+                        if (loginVM.usuarioActivo != null) {
+                            NavigationDrawerItem(
+                                label = { Text("Panel Productos") },
+                                selected = false,
+                                onClick = {
+                                    scope.launch { drawerState.close() }
+                                    navController.navigate("adminproductos")
+                                }
+                            )
+                        }
+
                         Spacer(Modifier.height(24.dp))
                         NavigationDrawerItem(
                             label = { Text("Cerrar Sesión") },
@@ -284,6 +302,20 @@ fun AppNavHost(
                 onBack = { navController.popBackStack() }
             )
         }
+        composable("adminproductos") {
+            val context = LocalContext.current
+            val db = remember {
+                Room.databaseBuilder(
+                    context,
+                    AppDatabase::class.java,
+                    "lvlup_db" // Cambia esto si el nombre de tu base de datos es distinto
+                ).build()
+            }
+            val adminVM = remember { AdminProductosViewModel(db.productDao()) }
+            AdminProductosScreen(adminVM)
+        }
+
+
     }
 
 }

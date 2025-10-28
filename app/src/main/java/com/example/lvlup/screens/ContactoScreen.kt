@@ -1,5 +1,10 @@
 package com.example.lvlup.screens
 
+import android.graphics.Bitmap
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -7,8 +12,13 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import kotlinx.coroutines.launch
+import androidx.core.content.ContextCompat
+import android.content.pm.PackageManager
 
 @Composable
 fun ContactoScreen(
@@ -20,6 +30,47 @@ fun ContactoScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     var showError by remember { mutableStateOf(false) }
+    var imagenUri by remember { mutableStateOf<Uri?>(null) }
+    var imagenBitmap by remember { mutableStateOf<Bitmap?>(null) }
+
+    val context = LocalContext.current
+
+    // Estado de permiso de cámara
+    var cameraPermissionGranted by remember {
+        mutableStateOf(
+            ContextCompat.checkSelfPermission(
+                context, android.Manifest.permission.CAMERA
+            ) == PackageManager.PERMISSION_GRANTED
+        )
+    }
+
+    // Lanzador para solicitar el permiso de cámara
+    val cameraPermissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        cameraPermissionGranted = isGranted
+        if (!isGranted) {
+            scope.launch {
+                snackbarHostState.showSnackbar("Debes habilitar el permiso de cámara en ajustes.")
+            }
+        }
+    }
+
+    // Lanzador galería
+    val pickPhotoLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        imagenUri = uri
+        imagenBitmap = null // Limpiar bitmap si se selecciona imagen
+    }
+
+    // Lanzador cámara
+    val takePhotoLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.TakePicturePreview()
+    ) { bitmap: Bitmap? ->
+        imagenBitmap = bitmap
+        imagenUri = null // Limpiar uri si se toma foto
+    }
 
     val camposValidos = nombre.isNotBlank() && email.isNotBlank() && mensaje.isNotBlank()
 
@@ -76,7 +127,45 @@ fun ContactoScreen(
                         maxLines = 6
                     )
 
-                    // Mensaje de error si intentan enviar con campos vacíos
+                    Spacer(Modifier.height(8.dp))
+                    Text("Adjuntar imagen (opcional)", style = MaterialTheme.typography.bodyMedium)
+                    Row(
+                        Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        Button(onClick = { pickPhotoLauncher.launch("image/*") }) {
+                            Text("Galería")
+                        }
+                        Button(onClick = {
+                            if (cameraPermissionGranted) {
+                                takePhotoLauncher.launch(null)
+                            } else {
+                                cameraPermissionLauncher.launch(android.Manifest.permission.CAMERA)
+                            }
+                        }) {
+                            Text("Cámara")
+                        }
+                    }
+                    // Mostrar imagen seleccionada (galería o cámara)
+                    if (imagenUri != null) {
+                        AsyncImage(
+                            model = imagenUri,
+                            contentDescription = "Imagen seleccionada desde galería",
+                            modifier = Modifier
+                                .size(120.dp)
+                                .padding(top = 8.dp)
+                        )
+                    }
+                    if (imagenBitmap != null) {
+                        Image(
+                            bitmap = imagenBitmap!!.asImageBitmap(),
+                            contentDescription = "Imagen capturada desde cámara",
+                            modifier = Modifier
+                                .size(120.dp)
+                                .padding(top = 8.dp)
+                        )
+                    }
+
                     if (showError && !camposValidos) {
                         Text(
                             "Debes completar todos los campos.",
@@ -94,6 +183,8 @@ fun ContactoScreen(
                                     nombre = ""
                                     email = ""
                                     mensaje = ""
+                                    imagenUri = null
+                                    imagenBitmap = null
                                     showError = false
                                 }
                             } else {

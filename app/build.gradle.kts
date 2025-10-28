@@ -41,6 +41,8 @@ android {
 }
 
 dependencies {
+    implementation("androidx.activity:activity-compose:1.7.2")
+    implementation("io.coil-kt:coil-compose:2.4.0")
     implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
     implementation("androidx.activity:activity-compose:1.9.0")
