@@ -6,8 +6,8 @@ LevelUp Gamer es una app demo desarrollada en Kotlin (Jetpack Compose + Room), p
 
 ## Estudiantes
 
-- Williams Olivares
-- Daniela Poblete
+- Williams Olivares.
+- Daniela Poblete.
 
 ## Funcionalidades implementadas
 
