@@ -12,13 +12,13 @@ interface ProductDao {
     fun getProductsByCategory(category: String): Flow<List<ProductEntity>>
 
     @Insert
-    suspend fun insert(product: ProductEntity): Long // ← Para productos nuevos
+    suspend fun insert(product: ProductEntity): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(vararg products: ProductEntity) // ← Solo para demo/datos iniciales
+    suspend fun insertAll(vararg products: ProductEntity)
 
     @Update
-    suspend fun updateProduct(product: ProductEntity) // ← Update dedicado para editar
+    suspend fun updateProduct(product: ProductEntity)
 
     @Delete
     suspend fun delete(product: ProductEntity)

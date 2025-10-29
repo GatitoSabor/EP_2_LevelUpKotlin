@@ -35,7 +35,6 @@ fun ContactoScreen(
 
     val context = LocalContext.current
 
-    // Estado de permiso de cámara
     var cameraPermissionGranted by remember {
         mutableStateOf(
             ContextCompat.checkSelfPermission(
@@ -44,7 +43,6 @@ fun ContactoScreen(
         )
     }
 
-    // Lanzador para solicitar el permiso de cámara
     val cameraPermissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
@@ -56,20 +54,18 @@ fun ContactoScreen(
         }
     }
 
-    // Lanzador galería
     val pickPhotoLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         imagenUri = uri
-        imagenBitmap = null // Limpiar bitmap si se selecciona imagen
+        imagenBitmap = null
     }
 
-    // Lanzador cámara
     val takePhotoLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.TakePicturePreview()
     ) { bitmap: Bitmap? ->
         imagenBitmap = bitmap
-        imagenUri = null // Limpiar uri si se toma foto
+        imagenUri = null
     }
 
     val camposValidos = nombre.isNotBlank() && email.isNotBlank() && mensaje.isNotBlank()
@@ -146,7 +142,6 @@ fun ContactoScreen(
                             Text("Cámara")
                         }
                     }
-                    // Mostrar imagen seleccionada (galería o cámara)
                     if (imagenUri != null) {
                         AsyncImage(
                             model = imagenUri,

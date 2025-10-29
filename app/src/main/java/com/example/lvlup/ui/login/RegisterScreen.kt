@@ -75,7 +75,6 @@ fun RegisterScreen(viewModel: LoginViewModel, onBack: () -> Unit, onLogin: () ->
                         visualTransformation = PasswordVisualTransformation()
                     )
 
-                    // Mensaje si intentaste registrar con campos vacíos
                     if (showError && !camposValidos) {
                         Text(
                             "Debes completar todos los campos.",

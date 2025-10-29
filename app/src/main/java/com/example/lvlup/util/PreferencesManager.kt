@@ -13,18 +13,15 @@ class PreferencesManager(private val context: Context) {
         val KEY_USER_EMAIL = stringPreferencesKey("user_email")
     }
 
-    // Guardar email del usuario logueado
     suspend fun saveUserEmail(email: String) {
         context.dataStore.edit { prefs ->
             prefs[KEY_USER_EMAIL] = email
         }
     }
 
-    // Leer email del usuario logueado
     val userEmailFlow = context.dataStore.data
         .map { prefs -> prefs[KEY_USER_EMAIL] ?: "" }
 
-    // Para borrar
     suspend fun clearUserEmail() {
         context.dataStore.edit { prefs ->
             prefs.remove(KEY_USER_EMAIL)

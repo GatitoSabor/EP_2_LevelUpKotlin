@@ -34,7 +34,6 @@ class PuntosViewModel (
                     )
                 )
             }
-            // Resta los puntos del usuario aquí si corresponde
             cart.clear()
         }
     }

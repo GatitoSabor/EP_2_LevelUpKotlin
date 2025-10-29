@@ -30,7 +30,6 @@ fun ProductoForm(
     var descuento by remember { mutableStateOf(producto?.discountPercent?.toString() ?: "") }
     var error by remember { mutableStateOf("") }
 
-    // Imagen
     var imageUri by remember { mutableStateOf<Uri?>(producto?.imageUrl?.toUri()) }
 
     val pickImageLauncher = rememberLauncherForActivityResult(
@@ -47,7 +46,6 @@ fun ProductoForm(
         OutlinedTextField(value = descripcion, onValueChange = { descripcion = it }, label = { Text("Descripción") })
         OutlinedTextField(value = descuento, onValueChange = { descuento = it }, label = { Text("Descuento (%)") })
 
-        // Selector de imagen
         Button(
             onClick = { pickImageLauncher.launch("image/*") },
             modifier = Modifier.padding(vertical = 8.dp)
@@ -55,7 +53,6 @@ fun ProductoForm(
             Text(if (imageUri != null) "Cambiar imagen" else "Seleccionar imagen")
         }
 
-        // Mostrar imagen debajo del botón
         imageUri?.let {
             Image(
                 painter = rememberAsyncImagePainter(model = it),
@@ -64,11 +61,10 @@ fun ProductoForm(
                     .fillMaxWidth()
                     .height(160.dp)
                     .padding(vertical = 8.dp)
-                    .clip(MaterialTheme.shapes.medium) // Esquinas redondeadas
+                    .clip(MaterialTheme.shapes.medium)
                     .border(1.dp, MaterialTheme.colorScheme.primary, MaterialTheme.shapes.medium)
             )
         }
-
 
         if (error.isNotEmpty())
             Text(error, color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(4.dp))

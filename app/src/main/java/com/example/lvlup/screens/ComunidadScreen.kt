@@ -58,7 +58,6 @@ fun ComunidadScreen() {
             .padding(16.dp),
         color = MaterialTheme.colorScheme.background
     ) {
-        // Surface blanco general
         Surface(
             color = Color.White,
             shape = MaterialTheme.shapes.medium,

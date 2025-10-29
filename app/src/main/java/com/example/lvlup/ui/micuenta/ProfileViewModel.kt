@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 class ProfileViewModel(
     private val userRepository: UserRepository,
     private val couponRepository: CouponRepository,
-    userId: Int // Inicialmente el de la sesión activa, pero puede cambiar con login/logout
+    userId: Int
 ) : ViewModel() {
 
     var usuario by mutableStateOf<UserEntity?>(null)
@@ -30,7 +30,6 @@ class ProfileViewModel(
         cargarUsuarioCompleto(userId)
     }
 
-    // Función para cambiar de usuario (tras login) y recargar todo
     fun cargarUsuarioCompleto(nuevoUserId: Int) {
         currentUserId = nuevoUserId
         cargarDatosUsuario()
@@ -72,7 +71,7 @@ class ProfileViewModel(
         tempNombre = ""
         tempEmail = ""
         cupones = listOf()
-        currentUserId = -1 // usuario inválido
+        currentUserId = -1
     }
 
     fun startEditNombre() {
@@ -113,7 +112,6 @@ class ProfileViewModel(
             viewModelScope.launch {
                 userRepository.updateUser(actualizado)
                 usuario = actualizado
-                // Puedes cerrar edición aquí si quieres
             }
         }
     }

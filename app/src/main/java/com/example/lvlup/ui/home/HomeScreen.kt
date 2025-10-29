@@ -1,6 +1,6 @@
 package com.example.lvlup.ui.home
 
-import ProductListViewModel// Usa el import correcto
+import ProductListViewModel
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -40,7 +40,6 @@ fun HomeScreen(
     var marcaSeleccionada by remember { mutableStateOf("Todas") }
     var expandedMarca by remember { mutableStateOf(false) }
 
-    // ¡USA EL FLOW, no delegados!
     val products by productListViewModel.productsFlow.collectAsState(initial = emptyList())
 
     val categories = remember(products) { listOf("Todas") + products.map { it.category }.distinct() }
@@ -60,7 +59,6 @@ fun HomeScreen(
                     .fillMaxWidth()
             ) {
                 Column(modifier = Modifier.padding(12.dp)) {
-                    // Header personalizado: BLANCO y letras moradas
                     Row(
                         Modifier
                             .fillMaxWidth()
@@ -90,7 +88,6 @@ fun HomeScreen(
                         }
                     }
 
-                    // Selectbox Categoría con animación
                     ExposedDropdownMenuBox(
                         expanded = expandedCategoria,
                         onExpandedChange = { expandedCategoria = !expandedCategoria },
@@ -130,7 +127,6 @@ fun HomeScreen(
                         }
                     }
 
-                    // Selectbox Marca con animación
                     ExposedDropdownMenuBox(
                         expanded = expandedMarca,
                         onExpandedChange = { expandedMarca = !expandedMarca },
@@ -170,7 +166,6 @@ fun HomeScreen(
                         }
                     }
 
-                    // Filtro de solo ofertas
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.padding(start = 8.dp, end = 8.dp, bottom = 8.dp)
@@ -182,7 +177,6 @@ fun HomeScreen(
                         Text("Solo ofertas", modifier = Modifier.padding(start = 4.dp))
                     }
 
-                    // Productos
                     LazyColumn(
                         modifier = Modifier
                             .padding(horizontal = 0.dp)
@@ -255,7 +249,6 @@ fun HomeScreen(
                         }
                     }
 
-                    // Dialog detalles
                     if (productoSeleccionado != null) {
                         AlertDialog(
                             onDismissRequest = { productoSeleccionado = null },

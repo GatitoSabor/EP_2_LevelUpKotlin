@@ -26,7 +26,7 @@ class AdminProductosViewModel(private val productDao: ProductDao) : ViewModel() 
 
     fun agregarProducto(producto: ProductEntity) {
         viewModelScope.launch {
-            productDao.insert(producto.copy(id = 0)) // ← OJO: id=0 para que Room autogenere
+            productDao.insert(producto.copy(id = 0))
         }
     }
 

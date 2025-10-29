@@ -64,7 +64,7 @@ fun MainAppWithDrawer(
 
     val showDrawer = currentRoute != "login" && currentRoute != "register"
 
-    val context = LocalContext.current // Context para logout
+    val context = LocalContext.current
 
     if (showDrawer) {
         ModalNavigationDrawer(
@@ -131,7 +131,6 @@ fun MainAppWithDrawer(
                             label = { Text("Cerrar Sesión") },
                             selected = false,
                             onClick = {
-                                // Logout efectivo seguro en Compose
                                 val prefs = context.getSharedPreferences("lvlup_prefs", android.content.Context.MODE_PRIVATE)
                                 prefs.edit().remove("usuario_id").apply()
                                 loginVM.logout()

@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.Flow
 class ProductListViewModel(private val repo: ProductRepository): ViewModel() {
     var category by mutableStateOf("")
 
-    // Exponer el flow
     val productsFlow: Flow<List<ProductEntity>>
         get() = if (category.isEmpty()) repo.getProducts() else repo.getProductsByCategory(category)
 }

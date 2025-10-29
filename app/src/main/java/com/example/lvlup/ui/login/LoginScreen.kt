@@ -82,7 +82,6 @@ fun LoginScreen(
                             viewModel.login { usuario ->
                                 isLoggingIn = false
                                 if (usuario != null) {
-                                    // --- Guarda la sesión ---
                                     guardarSesionUsuario(context, usuario.id)
                                     onLoginSuccess(usuario.id)
                                 }
@@ -107,7 +106,6 @@ fun LoginScreen(
     }
 }
 
-/** Guarda el id del usuario logueado en SharedPreferences **/
 fun guardarSesionUsuario(context: Context, userId: Int) {
     val prefs = context.getSharedPreferences("lvlup_prefs", Context.MODE_PRIVATE)
     prefs.edit().putInt("usuario_id", userId).apply()

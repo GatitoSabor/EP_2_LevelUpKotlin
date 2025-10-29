@@ -31,7 +31,6 @@ class CartViewModel : ViewModel() {
         }
     }
 
-    // Total solo usa descuento del producto (si corresponde)
     val total: Double
         get() = cartItems.sumOf {
             val disc = it.producto.discountPercent ?: 0.0

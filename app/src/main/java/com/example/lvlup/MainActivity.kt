@@ -32,7 +32,6 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             LvlUpTheme {
-                // Inserta demo SOLO si la base está vacía
                 androidx.compose.runtime.LaunchedEffect(Unit) {
                     val productosExistentes = productRepo.getProducts().first()
                     if (productosExistentes.isEmpty()) {
@@ -49,7 +48,6 @@ class MainActivity : ComponentActivity() {
                 val prefs = getSharedPreferences("lvlup_prefs", MODE_PRIVATE)
                 val usuarioIdGuardado = prefs.getInt("usuario_id", -1)
 
-                // Cargamos el VM con el ID del usuario guardado si existe
                 val miCuentaVM: ProfileViewModel = viewModel(
                     factory = ProfileViewModelFactory(userRepo, couponRepo, usuarioIdGuardado)
                 )
@@ -61,7 +59,7 @@ class MainActivity : ComponentActivity() {
                     cartVM = cartVM,
                     puntosVM = puntosVM,
                     miCuentaVM = miCuentaVM,
-                    usuarioIdGuardado = usuarioIdGuardado // <--- AGREGA ESTA LÍNEA
+                    usuarioIdGuardado = usuarioIdGuardado
                 )
             }
         }

@@ -51,25 +51,13 @@ dependencies {
     implementation("androidx.compose.material3:material3:1.2.0")
     implementation("androidx.compose.ui:ui-graphics:1.7.0")
     implementation("androidx.compose.material:material-icons-extended:1.7.0")
-
-    // ROOM (Base de datos)
     implementation("androidx.room:room-runtime:2.6.1")
     kapt("androidx.room:room-compiler:2.6.1")
     implementation("androidx.room:room-ktx:2.6.1")
-
-    // ViewModel y Lifecycle para Compose
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
-
-    // Navigation Compose
     implementation("androidx.navigation:navigation-compose:2.7.7")
-
-    // DataStore Preferences
     implementation("androidx.datastore:datastore-preferences:1.0.0")
-
-    // Coroutines Kotlin
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
-
-    // Coil (para imágenes en Compose)
     implementation("io.coil-kt:coil-compose:2.5.0")
 
     testImplementation("junit:junit:4.13.2")

@@ -34,7 +34,6 @@ fun MainDrawer(
     ModalNavigationDrawer(
         drawerContent = {
             ModalDrawerSheet {
-                // Principal
                 NavigationDrawerItem(
                     label = { Text("Inicio") },
                     selected = false,
@@ -79,7 +78,6 @@ fun MainDrawer(
                 Spacer(Modifier.weight(1f))
                 Divider()
 
-                // Botón de contacto
                 NavigationDrawerItem(
                     label = { Text("¡Contáctanos!") },
                     selected = false,
@@ -88,7 +86,6 @@ fun MainDrawer(
                     }
                 )
 
-                // Barra de iconos sociales al fondo
                 Row(
                     Modifier
                         .fillMaxWidth()

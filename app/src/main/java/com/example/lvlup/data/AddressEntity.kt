@@ -6,6 +6,6 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "addresses")
 data class AddressEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    val userId: Int,     // Relación con UserEntity
+    val userId: Int,
     val value: String
 )

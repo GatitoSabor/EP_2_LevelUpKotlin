@@ -8,11 +8,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = ButtonPurple,             // Botón morado
+    primary = ButtonPurple,
     secondary = ButtonPurpleDark,
     tertiary = ButtonPurpleDark,
-    background = LightGrayBackground,   // Fondo gris claro
-    surface = CardWhite,                // Tarjetas/cuadros blancos
+    background = LightGrayBackground,
+    surface = CardWhite,
     onPrimary = Color.White,
     onSecondary = Color.White,
     onTertiary = Color.White,
@@ -36,11 +36,10 @@ private val LightColorScheme = lightColorScheme(
 @Composable
 fun LvlUpTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = false, // Desactiva dynamic para forzar estos colores
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
-        // Si quieres permitir dynamicColor pon esto en true y asegúrate de que background/surface usen los nuevos valores.
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)

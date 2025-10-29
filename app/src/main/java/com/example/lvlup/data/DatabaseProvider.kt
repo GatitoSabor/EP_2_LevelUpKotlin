@@ -10,7 +10,7 @@ object DatabaseProvider {
     fun getInstance(context: Context): AppDatabase =
         INSTANCE ?: synchronized(this) {
             INSTANCE ?: Room.databaseBuilder(
-                context.applicationContext, // ¡Siempre ApplicationContext!
+                context.applicationContext,
                 AppDatabase::class.java,
                 "appdb"
             ).build().also { INSTANCE = it }

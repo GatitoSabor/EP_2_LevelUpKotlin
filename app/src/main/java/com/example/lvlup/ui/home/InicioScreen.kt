@@ -17,7 +17,7 @@ import coil.compose.rememberAsyncImagePainter
 
 @Composable
 fun InicioScreen(
-    productosEnOferta: List<ProductEntity>, // Debe pasarse la lista de productos con descuento
+    productosEnOferta: List<ProductEntity>,
     onGoCatalogo: () -> Unit,
     onGoComunidad: () -> Unit
 ) {

@@ -1,7 +1,7 @@
 package com.example.lvlup.repository
 
 import com.example.lvlup.data.ProductEntity
-import com.example.lvlup.data.ProductDao         // Asegúrate de tener este DAO
+import com.example.lvlup.data.ProductDao
 import kotlinx.coroutines.flow.Flow
 
 class ProductRepository(private val productDao: ProductDao) {

@@ -20,7 +20,7 @@ import com.example.lvlup.data.CouponEntity
 @Composable
 fun MiCuentaScreen(
     viewModel: ProfileViewModel,
-    usuarioId: Int?,          // ← PASA EL id del usuario activo desde LoginViewModel
+    usuarioId: Int?,
     onBack: () -> Unit
 ) {
     var editPassword by remember { mutableStateOf(false) }
@@ -30,7 +30,6 @@ fun MiCuentaScreen(
     var newPass by remember { mutableStateOf("") }
     var passError by remember { mutableStateOf<String?>(null) }
 
-    // Siempre recarga los datos del usuario cuando el id cambia:
     LaunchedEffect(usuarioId) {
         usuarioId?.let { viewModel.cargarUsuarioCompleto(it) }
     }
@@ -45,7 +44,6 @@ fun MiCuentaScreen(
                     .padding(20.dp)
                     .fillMaxWidth()
             ) {
-                // Scroll para toda la columna
                 Column(
                     modifier = Modifier
                         .padding(20.dp)
@@ -55,7 +53,6 @@ fun MiCuentaScreen(
                     Text("Mi Cuenta", style = MaterialTheme.typography.headlineMedium, color = MaterialTheme.colorScheme.primary)
                     Spacer(Modifier.height(16.dp))
 
-                    // DATOS PERSONALES
                     Text("Nombre:", style = MaterialTheme.typography.labelMedium)
                     Spacer(Modifier.height(4.dp))
                     Row(
@@ -113,7 +110,6 @@ fun MiCuentaScreen(
                     Divider()
                     Spacer(Modifier.height(12.dp))
 
-                    // DIRECCIONES
                     Text("Direcciones:", style = MaterialTheme.typography.titleMedium)
                     Spacer(Modifier.height(8.dp))
                     viewModel.direcciones.forEach { direccion ->
@@ -160,7 +156,6 @@ fun MiCuentaScreen(
                     Divider()
                     Spacer(Modifier.height(12.dp))
 
-                    // -------- CONTRASEÑA SEGURA --------
                     Text("Contraseña:", style = MaterialTheme.typography.labelMedium)
                     Spacer(Modifier.height(4.dp))
                     Row(
@@ -232,7 +227,6 @@ fun MiCuentaScreen(
                     if (viewModel.cupones.isEmpty()) {
                         Text("No tienes cupones canjeados aún.", style = MaterialTheme.typography.bodySmall)
                     } else {
-                        // LazyColumn en tamaño fijo dentro de la columna scroll
                         LazyColumn(
                             modifier = Modifier
                                 .fillMaxWidth()

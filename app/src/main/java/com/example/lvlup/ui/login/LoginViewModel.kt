@@ -14,7 +14,6 @@ class LoginViewModel(private val repo: UserRepository): ViewModel() {
     var loginSuccess by mutableStateOf(false)
     var loginError by mutableStateOf<String?>(null)
 
-    // Usuario actualmente logueado
     var usuarioActivo by mutableStateOf<UserEntity?>(null)
 
     fun login(onResult: (UserEntity?) -> Unit = {}) = viewModelScope.launch {
@@ -22,14 +21,14 @@ class LoginViewModel(private val repo: UserRepository): ViewModel() {
         loginSuccess = user != null
         loginError = if (user == null) "Credenciales inválidas" else null
         usuarioActivo = user
-        onResult(user)         // Ahora puedes obtener el usuario logueado en el flujo de login
+        onResult(user)
     }
 
     fun registerNewUser(username: String, email: String, password: String, onResult: (UserEntity?) -> Unit = {}) {
         viewModelScope.launch {
             val user = UserEntity(nombre = username, email = email, password = password)
             repo.register(user)
-            val usuarioRegistrado = repo.login(email, password) // Verifica y obtiene el usuario desde BD
+            val usuarioRegistrado = repo.login(email, password)
             usuarioActivo = usuarioRegistrado
             onResult(usuarioRegistrado)
         }
