@@ -26,22 +26,19 @@ class AdminProductosViewModel(private val productDao: ProductDao) : ViewModel() 
 
     fun agregarProducto(producto: ProductEntity) {
         viewModelScope.launch {
-            productDao.insertAll(producto)
-            cargarProductos()
+            productDao.insert(producto.copy(id = 0)) // ← OJO: id=0 para que Room autogenere
         }
     }
 
     fun actualizarProducto(producto: ProductEntity) {
         viewModelScope.launch {
-            productDao.insertAll(producto)
-            cargarProductos()
+            productDao.updateProduct(producto)
         }
     }
 
     fun eliminarProducto(producto: ProductEntity) {
         viewModelScope.launch {
-            // Usa tu método de delete si lo agregaste, si no, crea uno en ProductDao
-            // Por ejemplo: productDao.delete(producto)
+            productDao.delete(producto)
         }
     }
 }

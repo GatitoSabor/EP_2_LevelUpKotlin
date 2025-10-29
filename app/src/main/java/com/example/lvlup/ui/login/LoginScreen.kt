@@ -1,5 +1,6 @@
 package com.example.lvlup.ui.login
 
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -7,10 +8,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource // Si tienes un logo local en res/drawable
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-// import com.example.lvlup.R // sólo si usas un logo local
 
 @Composable
 fun LoginScreen(
@@ -18,11 +19,9 @@ fun LoginScreen(
     onLoginSuccess: (userId: Int) -> Unit,
     onRegister: () -> Unit
 ) {
-    val loginSuccess = viewModel.loginSuccess
     val loginError = viewModel.loginError
-    val usuarioActivo = viewModel.usuarioActivo
-
     var isLoggingIn by remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
     Surface(color = MaterialTheme.colorScheme.background, modifier = Modifier.fillMaxSize()) {
         Box(
@@ -82,8 +81,9 @@ fun LoginScreen(
                             isLoggingIn = true
                             viewModel.login { usuario ->
                                 isLoggingIn = false
-                                // Solo avanza si login es exitoso y hay usuario
                                 if (usuario != null) {
+                                    // --- Guarda la sesión ---
+                                    guardarSesionUsuario(context, usuario.id)
                                     onLoginSuccess(usuario.id)
                                 }
                             }
@@ -105,4 +105,10 @@ fun LoginScreen(
             }
         }
     }
+}
+
+/** Guarda el id del usuario logueado en SharedPreferences **/
+fun guardarSesionUsuario(context: Context, userId: Int) {
+    val prefs = context.getSharedPreferences("lvlup_prefs", Context.MODE_PRIVATE)
+    prefs.edit().putInt("usuario_id", userId).apply()
 }

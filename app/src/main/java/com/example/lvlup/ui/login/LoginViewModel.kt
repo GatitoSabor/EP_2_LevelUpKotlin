@@ -1,5 +1,6 @@
 package com.example.lvlup.ui.login
 
+import android.content.Context
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -32,6 +33,11 @@ class LoginViewModel(private val repo: UserRepository): ViewModel() {
             usuarioActivo = usuarioRegistrado
             onResult(usuarioRegistrado)
         }
+    }
+
+    fun guardarSesion(context: Context, usuarioId: Int) {
+        val prefs = context.getSharedPreferences("lvlup_prefs", Context.MODE_PRIVATE)
+        prefs.edit().putInt("usuario_id", usuarioId).apply()
     }
 
     fun logout() {

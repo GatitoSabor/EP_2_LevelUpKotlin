@@ -11,6 +11,8 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
+import androidx.compose.ui.draw.clip
 import coil.compose.rememberAsyncImagePainter
 import androidx.core.net.toUri
 
@@ -53,7 +55,7 @@ fun ProductoForm(
             Text(if (imageUri != null) "Cambiar imagen" else "Seleccionar imagen")
         }
 
-        // Mostrar preview de la imagen seleccionada
+        // Mostrar imagen debajo del botón
         imageUri?.let {
             Image(
                 painter = rememberAsyncImagePainter(model = it),
@@ -62,8 +64,11 @@ fun ProductoForm(
                     .fillMaxWidth()
                     .height(160.dp)
                     .padding(vertical = 8.dp)
+                    .clip(MaterialTheme.shapes.medium) // Esquinas redondeadas
+                    .border(1.dp, MaterialTheme.colorScheme.primary, MaterialTheme.shapes.medium)
             )
         }
+
 
         if (error.isNotEmpty())
             Text(error, color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(4.dp))

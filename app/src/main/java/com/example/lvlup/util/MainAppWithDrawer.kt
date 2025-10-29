@@ -2,6 +2,7 @@ package com.example.lvlup.util
 
 import ProductListViewModel
 import ProfileViewModel
+import android.content.Context
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
@@ -51,7 +52,8 @@ fun MainAppWithDrawer(
     productListVM: ProductListViewModel,
     cartVM: CartViewModel,
     puntosVM: PuntosViewModel,
-    miCuentaVM: ProfileViewModel
+    miCuentaVM: ProfileViewModel,
+    usuarioIdGuardado: Int
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -62,11 +64,12 @@ fun MainAppWithDrawer(
 
     val showDrawer = currentRoute != "login" && currentRoute != "register"
 
+    val context = LocalContext.current // Context para logout
+
     if (showDrawer) {
         ModalNavigationDrawer(
             drawerContent = {
                 ModalDrawerSheet {
-                    // Botón INICIO agregado arriba de todo
                     NavigationDrawerItem(
                         label = { Text("Inicio") },
                         selected = false,
@@ -115,22 +118,22 @@ fun MainAppWithDrawer(
                                 navController.navigate("micuenta")
                             }
                         )
-                        if (loginVM.usuarioActivo != null) {
-                            NavigationDrawerItem(
-                                label = { Text("Panel Productos") },
-                                selected = false,
-                                onClick = {
-                                    scope.launch { drawerState.close() }
-                                    navController.navigate("adminproductos")
-                                }
-                            )
-                        }
-
+                        NavigationDrawerItem(
+                            label = { Text("Panel Productos") },
+                            selected = false,
+                            onClick = {
+                                scope.launch { drawerState.close() }
+                                navController.navigate("adminproductos")
+                            }
+                        )
                         Spacer(Modifier.height(24.dp))
                         NavigationDrawerItem(
                             label = { Text("Cerrar Sesión") },
                             selected = false,
                             onClick = {
+                                // Logout efectivo seguro en Compose
+                                val prefs = context.getSharedPreferences("lvlup_prefs", android.content.Context.MODE_PRIVATE)
+                                prefs.edit().remove("usuario_id").apply()
                                 loginVM.logout()
                                 scope.launch { drawerState.close() }
                                 navController.navigate("login") {
@@ -150,7 +153,6 @@ fun MainAppWithDrawer(
                             navController.navigate("contacto")
                         }
                     )
-
                     Row(
                         Modifier
                             .fillMaxWidth()
@@ -206,12 +208,12 @@ fun MainAppWithDrawer(
                     puntosVM = puntosVM,
                     miCuentaVM = miCuentaVM,
                     productosEnOferta = productosEnOferta,
+                    usuarioIdGuardado = usuarioIdGuardado,
                     modifier = Modifier.padding(innerPadding)
                 )
             }
         }
     } else {
-        val productosEnOferta by productListVM.productsFlow.collectAsState(initial = emptyList())
         AppNavHost(
             navController = navController,
             loginVM = loginVM,
@@ -219,13 +221,12 @@ fun MainAppWithDrawer(
             cartVM = cartVM,
             puntosVM = puntosVM,
             miCuentaVM = miCuentaVM,
-            productosEnOferta = productosEnOferta
+            productosEnOferta = productosEnOferta,
+            usuarioIdGuardado = usuarioIdGuardado
         )
     }
 }
 
-
-// Cambia así el AppNavHost:
 @Composable
 fun AppNavHost(
     navController: NavHostController,
@@ -235,11 +236,14 @@ fun AppNavHost(
     puntosVM: PuntosViewModel,
     miCuentaVM: ProfileViewModel,
     productosEnOferta: List<com.example.lvlup.data.ProductEntity>,
+    usuarioIdGuardado: Int,
     modifier: Modifier = Modifier
 ) {
+    val startScreen = if (usuarioIdGuardado != -1) "inicio" else "login"
+
     NavHost(
         navController = navController,
-        startDestination = "inicio",
+        startDestination = startScreen,
         modifier = modifier
     ) {
         composable("inicio") {
@@ -292,30 +296,26 @@ fun AppNavHost(
         composable("micuenta") {
             MiCuentaScreen(
                 viewModel = miCuentaVM,
-                usuarioId = loginVM.usuarioActivo?.id, // ¡Este es el nuevo parámetro!
+                usuarioId = loginVM.usuarioActivo?.id,
                 onBack = { navController.popBackStack() }
             )
         }
-
         composable("contacto") {
             ContactoScreen(
                 onBack = { navController.popBackStack() }
             )
         }
         composable("adminproductos") {
-            val context = LocalContext.current
+            val context = LocalContext.current.applicationContext
             val db = remember {
                 Room.databaseBuilder(
                     context,
                     AppDatabase::class.java,
-                    "lvlup_db" // Cambia esto si el nombre de tu base de datos es distinto
+                    "lvlup_db"
                 ).build()
             }
             val adminVM = remember { AdminProductosViewModel(db.productDao()) }
             AdminProductosScreen(adminVM)
         }
-
-
     }
-
 }
