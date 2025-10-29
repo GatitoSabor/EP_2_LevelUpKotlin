@@ -119,7 +119,7 @@ fun MainAppWithDrawer(
                             }
                         )
                         NavigationDrawerItem(
-                            label = { Text("Panel Productos") },
+                            label = { Text("Vista Administrador") },
                             selected = false,
                             onClick = {
                                 scope.launch { drawerState.close() }
@@ -311,7 +311,7 @@ fun AppNavHost(
                     context,
                     AppDatabase::class.java,
                     "lvlup_db"
-                ).build()
+                ).fallbackToDestructiveMigration().build()
             }
             val adminVM = remember { AdminProductosViewModel(db.productDao()) }
             AdminProductosScreen(adminVM)

@@ -10,7 +10,7 @@ import androidx.room.RoomDatabase
         AddressEntity::class,
         CouponEntity::class
     ],
-    version = 11
+    version = 13
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao

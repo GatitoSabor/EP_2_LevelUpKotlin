@@ -12,5 +12,6 @@ data class ProductEntity(
     val price: Double,
     val description: String,
     val imageUrl: String? = null,
+    val imageResId: Int? = null,
     val discountPercent: Double? = null
 )

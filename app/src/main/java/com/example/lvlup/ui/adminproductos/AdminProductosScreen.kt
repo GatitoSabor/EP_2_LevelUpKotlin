@@ -1,5 +1,6 @@
 package com.example.lvlup.ui.adminproductos
 
+import ProductoForm
 import androidx.compose.runtime.*
 import androidx.compose.material3.*
 import androidx.compose.foundation.layout.*
@@ -25,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.clickable
+import androidx.compose.ui.res.painterResource
 
 @Composable
 fun AdminProductosScreenWrapper() {
@@ -170,15 +172,28 @@ fun AdminProductosScreen(viewModel: AdminProductosViewModel) {
                                     .fillMaxWidth(),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                if (!prod.imageUrl.isNullOrBlank()) {
-                                    Image(
-                                        painter = rememberAsyncImagePainter(prod.imageUrl),
-                                        contentDescription = prod.name,
-                                        modifier = Modifier
-                                            .size(62.dp)
-                                            .clip(RoundedCornerShape(12.dp))
-                                            .padding(end = 12.dp)
-                                    )
+                                // Mostrar imagen desde drawable o galería
+                                when {
+                                    prod.imageResId != null -> {
+                                        Image(
+                                            painter = painterResource(prod.imageResId!!),
+                                            contentDescription = prod.name,
+                                            modifier = Modifier
+                                                .size(62.dp)
+                                                .clip(RoundedCornerShape(12.dp))
+                                                .padding(end = 12.dp)
+                                        )
+                                    }
+                                    !prod.imageUrl.isNullOrBlank() -> {
+                                        Image(
+                                            painter = rememberAsyncImagePainter(prod.imageUrl),
+                                            contentDescription = prod.name,
+                                            modifier = Modifier
+                                                .size(62.dp)
+                                                .clip(RoundedCornerShape(12.dp))
+                                                .padding(end = 12.dp)
+                                        )
+                                    }
                                 }
                                 Column(
                                     Modifier.weight(1f)
@@ -224,15 +239,27 @@ fun AdminProductosScreen(viewModel: AdminProductosViewModel) {
                                 horizontalAlignment = Alignment.CenterHorizontally,
                                 modifier = Modifier.fillMaxWidth()
                             ) {
-                                if (!productoDetalle!!.imageUrl.isNullOrBlank()) {
-                                    Image(
-                                        painter = rememberAsyncImagePainter(productoDetalle!!.imageUrl),
-                                        contentDescription = productoDetalle!!.name,
-                                        modifier = Modifier
-                                            .size(128.dp)
-                                            .clip(RoundedCornerShape(12.dp))
-                                            .padding(bottom = 12.dp)
-                                    )
+                                when {
+                                    productoDetalle!!.imageResId != null -> {
+                                        Image(
+                                            painter = painterResource(productoDetalle!!.imageResId!!),
+                                            contentDescription = productoDetalle!!.name,
+                                            modifier = Modifier
+                                                .size(128.dp)
+                                                .clip(RoundedCornerShape(12.dp))
+                                                .padding(bottom = 12.dp)
+                                        )
+                                    }
+                                    !productoDetalle!!.imageUrl.isNullOrBlank() -> {
+                                        Image(
+                                            painter = rememberAsyncImagePainter(productoDetalle!!.imageUrl),
+                                            contentDescription = productoDetalle!!.name,
+                                            modifier = Modifier
+                                                .size(128.dp)
+                                                .clip(RoundedCornerShape(12.dp))
+                                                .padding(bottom = 12.dp)
+                                        )
+                                    }
                                 }
                                 Text("Categoría: ${productoDetalle!!.category}")
                                 Text("Marca: ${productoDetalle!!.brand}")
