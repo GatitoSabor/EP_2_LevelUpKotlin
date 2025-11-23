@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 class ProductListViewModel(private val repo: ProductRepository) : ViewModel() {
     var category by mutableStateOf("")
 
-    private val _products = MutableStateFlow<List<ProductEntity>>(emptyList())
+    public val _products = MutableStateFlow<List<ProductEntity>>(emptyList())
     val products: StateFlow<List<ProductEntity>> get() = _products
 
     init {

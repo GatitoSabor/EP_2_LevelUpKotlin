@@ -6,8 +6,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.lvlup.repository.CouponRepository
+import com.example.lvlup.repository.CouponApiService
 import com.example.lvlup.repository.ProductApiService
 import com.example.lvlup.repository.ProductRepository
+import com.example.lvlup.repository.UserApiService
 import com.example.lvlup.repository.UserRepository
 import com.example.lvlup.ui.cart.CartViewModel
 import com.example.lvlup.ui.cart.CartViewModelFactory
@@ -26,18 +28,21 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Instancia Retrofit para productos vía AWS/backend REST
+        // Retrofit construido con tu URL para AWS/Spring Boot backend
         val retrofit = Retrofit.Builder()
-            .baseUrl("https://TUBASEURL.com/") // Reemplaza por tu URL de backend real
+            .baseUrl("http://localhost:8080") // Reemplaza por la URL real de tu backend
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-        val productApi = retrofit.create(ProductApiService::class.java)
-        val productRepo = ProductRepository(productApi)
 
-        // Usuarios y cupones siguen usando Room/DAO local
-        val db = com.example.lvlup.data.DatabaseProvider.getInstance(applicationContext)
-        val userRepo = UserRepository(db.userDao())
-        val couponRepo = CouponRepository(db.couponDao())
+        // Instancias de los servicios de API
+        val productApi = retrofit.create(ProductApiService::class.java)
+        val userApi = retrofit.create(UserApiService::class.java)
+        val couponApi = retrofit.create(CouponApiService::class.java)
+
+        // Repositorios conectados vía Retrofit/API REST
+        val productRepo = ProductRepository(productApi)
+        val userRepo = UserRepository(userApi)
+        val couponRepo = CouponRepository(couponApi)
 
         setContent {
             LvlUpTheme {

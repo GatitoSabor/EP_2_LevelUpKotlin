@@ -1,6 +1,6 @@
 package com.example.lvlup.util
 
-import ProductListViewModel
+import com.example.lvlup.ui.home.ProductListViewModel
 import ProfileViewModel
 import android.content.Context
 import androidx.compose.foundation.layout.*
@@ -42,6 +42,10 @@ import com.example.lvlup.ui.home.InicioScreen
 import androidx.compose.ui.platform.LocalContext
 import androidx.room.Room
 import com.example.lvlup.data.AppDatabase
+import com.example.lvlup.repository.ProductApiService
+import com.example.lvlup.repository.ProductRepository
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -60,7 +64,7 @@ fun MainAppWithDrawer(
     val navBackStackEntry = navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry.value?.destination?.route
     val uriHandler = LocalUriHandler.current
-    val productosEnOferta by productListVM.productsFlow.collectAsState(initial = emptyList())
+    val productosEnOferta by productListVM._products.collectAsState(initial = emptyList())
 
     val showDrawer = currentRoute != "login" && currentRoute != "register"
 
@@ -305,15 +309,14 @@ fun AppNavHost(
             )
         }
         composable("adminproductos") {
-            val context = LocalContext.current.applicationContext
-            val db = remember {
-                Room.databaseBuilder(
-                    context,
-                    AppDatabase::class.java,
-                    "lvlup_db"
-                ).fallbackToDestructiveMigration().build()
-            }
-            val adminVM = remember { AdminProductosViewModel(db.productDao()) }
+            val retrofit = Retrofit.Builder()
+                .baseUrl("https://TUBASEURL.com/") // Pon la URL de tu API!
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+            val productApi = retrofit.create(ProductApiService::class.java)
+            val productRepo = ProductRepository(productApi)
+
+            val adminVM = remember { AdminProductosViewModel(repository = productRepo) }
             AdminProductosScreen(adminVM)
         }
     }

@@ -1,11 +1,10 @@
 package com.example.lvlup.ui.home
 
-import ProductListViewModel
+import com.example.lvlup.ui.home.ProductListViewModel
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -21,6 +20,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -40,7 +40,7 @@ fun HomeScreen(
     var marcaSeleccionada by remember { mutableStateOf("Todas") }
     var expandedMarca by remember { mutableStateOf(false) }
 
-    val products by productListViewModel.productsFlow.collectAsState(initial = emptyList())
+    val products by productListViewModel._products.collectAsState(initial = emptyList())
 
     val categories = remember(products) { listOf("Todas") + products.map { it.category }.distinct() }
     val marcas = remember(products) { listOf("Todas") + products.map { it.brand }.distinct() }
